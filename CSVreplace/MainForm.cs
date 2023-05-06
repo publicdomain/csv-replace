@@ -275,7 +275,12 @@ namespace CSVreplace
         /// <param name="e">Event arguments.</param>
         private void OnNewToolStripMenuItemClick(object sender, EventArgs e)
         {
-            // TODO Add code 
+            // Clear checked lists
+            this.targetTextFilesCheckedListBox.Items.Clear();
+            this.csvReplacementsCheckedListBox.Items.Clear();
+
+            // Focus first button
+            this.addFilesButton.Focus();
         }
 
         /// <summary>
