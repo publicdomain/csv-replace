@@ -25,7 +25,6 @@ namespace CSVreplace
 		private System.Windows.Forms.StatusStrip mainStatusStrip;
 		private System.Windows.Forms.ToolStripStatusLabel processedTextToolStripStatusLabel;
 		private System.Windows.Forms.ToolStripStatusLabel processedToolStripStatusLabel;
-		private System.Windows.Forms.SaveFileDialog textFileSaveFileDialog;
 		private System.Windows.Forms.TableLayoutPanel mainTableLayoutPanel;
 		private System.Windows.Forms.Label targetTextFilesLabel;
 		private System.Windows.Forms.Button addFilesButton;
@@ -77,7 +76,6 @@ namespace CSVreplace
 			this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
 			this.processedTextToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.processedToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-			this.textFileSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.mainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.targetTextFilesLabel = new System.Windows.Forms.Label();
 			this.addFilesButton = new System.Windows.Forms.Button();
@@ -87,7 +85,9 @@ namespace CSVreplace
 			this.loadCsvFileButton = new System.Windows.Forms.Button();
 			this.csvReplacementsCheckedListBox = new System.Windows.Forms.CheckedListBox();
 			this.replaceButton = new System.Windows.Forms.Button();
-			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+			this.csvFileOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.checkOnAddToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mainMenuStrip.SuspendLayout();
 			this.mainStatusStrip.SuspendLayout();
 			this.mainTableLayoutPanel.SuspendLayout();
@@ -148,6 +148,7 @@ namespace CSVreplace
 			// 
 			this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
 									this.alwaysOnTopToolStripMenuItem,
+									this.checkOnAddToolStripMenuItem,
 									this.backupNoReplaceToolStripMenuItem});
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
 			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
@@ -217,6 +218,7 @@ namespace CSVreplace
 			// 
 			this.textFileOpenFileDialog.DefaultExt = "txt";
 			this.textFileOpenFileDialog.Filter = "TXT Files|*.txt|All files (*.*)|*.*";
+			this.textFileOpenFileDialog.Multiselect = true;
 			// 
 			// mainStatusStrip
 			// 
@@ -241,11 +243,6 @@ namespace CSVreplace
 			this.processedToolStripStatusLabel.Name = "processedToolStripStatusLabel";
 			this.processedToolStripStatusLabel.Size = new System.Drawing.Size(14, 17);
 			this.processedToolStripStatusLabel.Text = "0";
-			// 
-			// textFileSaveFileDialog
-			// 
-			this.textFileSaveFileDialog.DefaultExt = "txt";
-			this.textFileSaveFileDialog.Filter = "TXT Files|*.txt|All files (*.*)|*.*";
 			// 
 			// mainTableLayoutPanel
 			// 
@@ -380,10 +377,18 @@ namespace CSVreplace
 			this.replaceButton.UseVisualStyleBackColor = true;
 			this.replaceButton.Click += new System.EventHandler(this.OnReplaceButtonClick);
 			// 
-			// openFileDialog1
+			// csvFileOpenFileDialog
 			// 
-			this.openFileDialog1.DefaultExt = "csv";
-			this.openFileDialog1.Filter = "CSV Files|*.csv|All files (*.*)|*.*";
+			this.csvFileOpenFileDialog.DefaultExt = "csv";
+			this.csvFileOpenFileDialog.Filter = "CSV Files|*.csv|All files (*.*)|*.*";
+			// 
+			// checkOnAddToolStripMenuItem
+			// 
+			this.checkOnAddToolStripMenuItem.Checked = true;
+			this.checkOnAddToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.checkOnAddToolStripMenuItem.Name = "checkOnAddToolStripMenuItem";
+			this.checkOnAddToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+			this.checkOnAddToolStripMenuItem.Text = "&Check on add";
 			// 
 			// MainForm
 			// 
@@ -405,7 +410,9 @@ namespace CSVreplace
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.ToolStripMenuItem checkOnAddToolStripMenuItem;
+		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
 		private System.Windows.Forms.ToolStripMenuItem backupNoReplaceToolStripMenuItem;
-		private System.Windows.Forms.OpenFileDialog openFileDialog1;
+		private System.Windows.Forms.OpenFileDialog csvFileOpenFileDialog;
 	}
 }

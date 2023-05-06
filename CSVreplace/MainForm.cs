@@ -7,6 +7,7 @@ namespace CSVreplace
 {
     // Directives
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
@@ -44,6 +45,31 @@ namespace CSVreplace
         private void OnAddFilesButtonClick(object sender, EventArgs e)
         {
             // TODO Add code
+        }
+
+        /// <summary>
+        /// Adds the text files.
+        /// </summary>
+        /// <param name="textFiles">Text files.</param>
+        private void AddTextFiles(IEnumerable textFiles)
+        {
+            // Iterate collected files
+            foreach (string textFile in textFiles)
+            {
+                // Check for a previous one
+                if (!this.targetTextFilesCheckedListBox.Items.Contains(textFile))
+                {
+                    // Add to target text files
+                    this.targetTextFilesCheckedListBox.Items.Add(textFile);
+                }
+
+                // Should it be checked on add?
+                if (this.checkOnAddToolStripMenuItem.Checked)
+                {
+                    // Check item (current or previous)
+                    this.targetTextFilesCheckedListBox.SetItemChecked(this.targetTextFilesCheckedListBox.Items.IndexOf(textFile), true);
+                }
+            }
         }
 
         /// <summary>
