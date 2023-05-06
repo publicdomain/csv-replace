@@ -10,6 +10,7 @@ namespace CSVreplace
     using System.Collections;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.IO;
     using System.Windows.Forms;
 
     /// <summary>
@@ -87,7 +88,15 @@ namespace CSVreplace
         /// <param name="e">Event arguments.</param>
         private void OnAddFolderButtonClick(object sender, EventArgs e)
         {
-            // TODO Add code
+            // Reset selected path
+            this.folderBrowserDialog.SelectedPath = string.Empty;
+
+            // Show folder browser dialog
+            if (this.folderBrowserDialog.ShowDialog() == DialogResult.OK && this.folderBrowserDialog.SelectedPath.Length > 0)
+            {
+                // Add the text files 
+                this.AddTextFiles(Directory.GetFiles(this.folderBrowserDialog.SelectedPath, "*.txt"));
+            }
         }
 
         /// <summary>
