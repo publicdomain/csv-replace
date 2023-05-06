@@ -20,11 +20,6 @@ namespace CSVreplace
     public partial class MainForm : Form
     {
         /// <summary>
-        /// The processed.
-        /// </summary>
-        int processed = 0;
-
-        /// <summary>
         /// Gets or sets the associated icon.
         /// </summary>
         /// <value>The associated icon.</value>
@@ -125,13 +120,13 @@ namespace CSVreplace
                         /* Check for proper <search>,<replace> format */
 
                         // Split into fields, trimmed
-                        string[] fields = line.Split(',').Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+                        string[] fields = line.Split(new string[] { "," }, 2, StringSplitOptions.None).Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
                         // Check there are two
                         if (fields.Length == 2)
                         {
-                            // Set to "search => replace" format
-                            string displayLine = $"{fields[0]} => {fields[1]}";
+                            // Set to "search, replace" format
+                            string displayLine = $"{fields[0]}, {fields[1]}";
 
                             // Check for a previous one
                             if (!this.csvReplacementsCheckedListBox.Items.Contains(displayLine))
@@ -159,7 +154,118 @@ namespace CSVreplace
         /// <param name="e">Event arguments.</param>
         private void OnReplaceButtonClick(object sender, EventArgs e)
         {
-            // TODO Add code
+            // Check for checked files to work with
+            if (this.targetTextFilesCheckedListBox.CheckedItems.Count == 0)
+            {
+                // Advise user
+                MessageBox.Show("Please add target text files.", "Missing targets", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                // Halt flow
+                return;
+            }
+
+            // Check for replacements to work with
+            if (this.csvReplacementsCheckedListBox.CheckedItems.Count == 0)
+            {
+                // Advise user
+                MessageBox.Show("Please add CSV replacements.", "Missing replacements", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                // Halt flow
+                return;
+            }
+
+            // Processed count
+            int processed = 0;
+
+            // Check there are checked replacements
+            if (this.csvReplacementsCheckedListBox.CheckedItems.Count > 0)
+            {
+                // Iterate checked files
+                foreach (string textFilePath in this.targetTextFilesCheckedListBox.CheckedItems)
+                {
+                    try
+                    {
+                        // Check file exists
+                        if (File.Exists(textFilePath))
+                        {
+                            // Set text file contents
+                            string textFileContents = File.ReadAllText(textFilePath);
+
+                            // Replace checked
+                            foreach (string replacement in this.csvReplacementsCheckedListBox.CheckedItems)
+                            {
+                                // TODO Extract fields from checked item [Can be centralized]
+                                string[] fields = replacement.Split(new string[] { "," }, 2, StringSplitOptions.None).Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+
+                                // Replace
+                                textFileContents = textFileContents.Replace(fields[0], fields[1]);
+                            }
+
+                            // Check if must backup
+                            if (this.backupOnReplaceToolStripMenuItem.Checked)
+                            {
+                                try
+                                {
+                                    // Set path for backup
+                                    string backupFilePath = Path.Combine(Path.GetDirectoryName(textFilePath), String.Concat(Path.GetFileNameWithoutExtension(textFilePath), $"-{(int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds}", Path.GetExtension(textFilePath)));
+
+                                    // Backup file with epoch
+                                    File.Copy(textFilePath, backupFilePath);
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Write to error log
+                                    this.LogError($"Error when backing up to \"{textFilePath}\". Message: {ex.Message}");
+
+                                    // Halt flow (presumably, the user will not want to lose original file's contents)
+                                    continue;
+                                }
+                            }
+
+                            // Write replaced file
+                            File.WriteAllText(textFilePath, textFileContents);
+
+                            // Raise processed
+                            processed++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Write to error log
+                        this.LogError($"Error when processing \"{textFilePath}\". Message: {ex.Message}");
+
+                        // Halt flow
+                        continue;
+                    }
+                }
+            }
+
+            // Update processed
+            this.processedToolStripStatusLabel.Text = $"{processed}/{this.targetTextFilesCheckedListBox.CheckedItems.Count}";
+
+            // Set errors
+            int errors = this.targetTextFilesCheckedListBox.CheckedItems.Count - processed;
+
+            // Advise user
+            MessageBox.Show($"Replaced with {(errors == 0 ? "no" : errors.ToString())} error{(errors == 1 ? string.Empty : "s")}.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        /// <summary>
+        /// Logs the error.
+        /// </summary>
+        /// <param name="message">Message.</param>
+        private void LogError(string message)
+        {
+            try
+            {
+                // TODO Write to error log [Can do smart new line processing]
+                File.AppendAllText("CSVreplace_ErrorLog.txt", $"{Environment.NewLine}{message}");
+            }
+            catch (Exception ex)
+            {
+                // TODO Advise user
+                ;
+            }
         }
 
         /// <summary>
