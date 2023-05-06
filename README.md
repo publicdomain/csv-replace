@@ -16,7 +16,7 @@ Targets Microsoft .NET framework v4.5
 
 - Backup files on replace.
 - Add selected file(s) or a whole folder.
-- Filter lines by "<search>,<replace>" format.
+- Filter lines by "{search},{replace}" format.
 - Trim blanks.
 - Check on add.
 - Sorted lists.
