@@ -44,7 +44,15 @@ namespace CSVreplace
         /// <param name="e">Event arguments.</param>
         private void OnAddFilesButtonClick(object sender, EventArgs e)
         {
-            // TODO Add code
+            // Reset file name
+            this.textFileOpenFileDialog.FileName = string.Empty;
+
+            // Show open file dialog
+            if (this.textFileOpenFileDialog.ShowDialog() == DialogResult.OK && this.textFileOpenFileDialog.FileNames.Length > 0)
+            {
+                // Add the text files 
+                this.AddTextFiles(this.textFileOpenFileDialog.FileNames);
+            }
         }
 
         /// <summary>
