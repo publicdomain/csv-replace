@@ -11,6 +11,7 @@ namespace CSVreplace
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
     using System.Windows.Forms;
 
     /// <summary>
@@ -106,7 +107,49 @@ namespace CSVreplace
         /// <param name="e">Event arguments.</param>
         private void OnLoadCsvFileButtonClick(object sender, EventArgs e)
         {
-            // TODO Add code
+            // Reset file name
+            this.csvFileOpenFileDialog.FileName = string.Empty;
+
+            // Show open file dialog
+            if (this.csvFileOpenFileDialog.ShowDialog() == DialogResult.OK && this.csvFileOpenFileDialog.FileNames.Length > 0)
+            {
+                // Add the CSV file lines with format <search>,<replace>
+                using (StreamReader reader = new StreamReader(this.csvFileOpenFileDialog.FileName))
+                {
+                    // Current line
+                    string line;
+
+                    // Read the lines
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        /* Check for proper <search>,<replace> format */
+
+                        // Split into fields, trimmed
+                        string[] fields = line.Split(',').Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+
+                        // Check there are two
+                        if (fields.Length == 2)
+                        {
+                            // Set to "search => replace" format
+                            string displayLine = $"{fields[0]} => {fields[1]}";
+
+                            // Check for a previous one
+                            if (!this.csvReplacementsCheckedListBox.Items.Contains(displayLine))
+                            {
+                                // Add to CSV checked list
+                                this.csvReplacementsCheckedListBox.Items.Add(displayLine);
+                            }
+
+                            // Should it be checked on add?
+                            if (this.checkOnAddToolStripMenuItem.Checked)
+                            {
+                                // Check item (current or previous)
+                                this.csvReplacementsCheckedListBox.SetItemChecked(this.csvReplacementsCheckedListBox.Items.IndexOf(displayLine), true);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
