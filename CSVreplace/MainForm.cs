@@ -9,6 +9,7 @@ namespace CSVreplace
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -307,7 +308,8 @@ namespace CSVreplace
         /// <param name="e">Event arguments.</param>
         private void OnFreeReleasesPublicDomainisToolStripMenuItemClick(object sender, EventArgs e)
         {
-            // TODO Add code
+            // Open our site
+            Process.Start("https://publicdomain.is");
         }
 
         /// <summary>
