@@ -282,6 +282,9 @@ namespace CSVreplace
             this.targetTextFilesCheckedListBox.Items.Clear();
             this.csvReplacementsCheckedListBox.Items.Clear();
 
+            // Reset processed
+            this.processedToolStripStatusLabel.Text = "0";
+
             // Focus first button
             this.addFilesButton.Focus();
         }
